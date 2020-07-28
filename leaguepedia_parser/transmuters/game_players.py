@@ -5,12 +5,22 @@ import lol_id_tools as lit
 from leaguepedia_parser.logger import leaguepedia_parser_logger
 
 # TODO Add more fields?
+
 game_players_fields = {
     "ScoreboardPlayers.Name=gameName",
     "ScoreboardPlayers.Role_Number=gameRoleNumber",
     "ScoreboardPlayers.Champion",
     "ScoreboardPlayers.Side",
-    "Players.Name=irlName",
+    # "ScoreboardPlayers.Kills"
+    # "ScoreboardPlayers.Deaths"
+    # "ScoreboardPlayers.Assists"
+    # "ScoreboardPlayers.SummonerSpells"
+    # "ScoreboardPlayers.Gold"
+    # "ScoreboardPlayers."
+    # "ScoreboardPlayers."
+    # "ScoreboardPlayers."
+    # "ScoreboardPlayers."
+    # "ScoreboardPlayers."
     "Players.Country",
     "Players.Birthdate",
     # "Players.ID=currentGameName",
@@ -20,7 +30,32 @@ game_players_fields = {
     # "Players.SoloqueueIds",
 }
 
+ScoreboardPlayers_fields = {
+    "ScoreboardPlayers.Name=gameName",
+    "ScoreboardPlayers.Role_Number=gameRoleNumber",
+    "ScoreboardPlayers.Champion",
+    "ScoreboardPlayers.Side",
+    # "ScoreboardPlayers.Kills"
+    # "ScoreboardPlayers.Deaths"
+    # "ScoreboardPlayers.Assists"
+    # "ScoreboardPlayers.SummonerSpells"
+    # "ScoreboardPlayers.Gold"
+    # "ScoreboardPlayers."
+    # "ScoreboardPlayers."
+    # "ScoreboardPlayers."
+    # "ScoreboardPlayers."
+    # "ScoreboardPlayers."
+}
 
+Players_fields = {
+    "Players.Country",
+    "Players.Birthdate",
+    # "Players.ID=currentGameName",
+    # "Players.Image",
+    # "Players.Team=currentTeam",
+    # "Players.Role=currentRole",
+    # "Players.SoloqueueIds",
+}
 role_translation = {"1": "TOP", "2": "JGL", "3": "MID", "4": "BOT", "5": "SUP"}
 
 
@@ -46,7 +81,8 @@ def add_players(game: LolGame, players: List[dict]) -> LolGame:
                     p
                     for p in players
                     if p["Side"] == team_side_leaguepedia
-                    and lit.get_id(p["Champion"], object_type="champion") == game_player["championId"]
+                    and lit.get_id(p["Champion"], object_type="champion")
+                    == game_player["championId"]
                 )
 
                 game_player["role"] = role_translation[player["gameRoleNumber"]]

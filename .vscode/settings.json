@@ -1,0 +1,15 @@
+{
+    "python.pythonPath": "C:\\Users\\John\\.conda\\envs\\leaguepediaparser\\python.exe",
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+    "python.dataScience.changeDirOnImportExport": true,
+    "pythonTestExplorer.testFramework": "pytest",
+    "python.testing.pytestEnabled": true,
+    "testExplorer.hideEmptyLog": false,
+    "testExplorer.onReload": "reset",
+    "testExplorer.showOnRun": true,
+    "testExplorer.sort": "byLocation",
+    "vsintellicode.features.python.deepLearning": "enabled",
+    "python.testing.unittestEnabled": true,
+    "testExplorer.onStart": "reset"
+}

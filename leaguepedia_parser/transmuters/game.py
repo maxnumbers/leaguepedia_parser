@@ -3,7 +3,12 @@ from datetime import datetime, timezone
 from typing import TypedDict
 
 import lol_id_tools as lit
-from lol_dto.classes.game import LolGame, LolGameTeam, LolGamePlayer, LolGameTeamEndOfGameStats
+from lol_dto.classes.game import (
+    LolGame,
+    LolGameTeam,
+    LolGamePlayer,
+    LolGameTeamEndOfGameStats,
+)
 
 from leaguepedia_parser.transmuters.game_players import LeaguepediaPlayerIdentifier
 
@@ -63,7 +68,7 @@ def transmute_game(source_dict: dict) -> LolGame:
                 scoreboardIdWiki=source_dict["ScoreboardID Wiki"],
                 uniqueGame=source_dict["UniqueGame"],
                 matchHistoryUrl=source_dict["MatchHistory"],
-                overviewPage=source_dict["OverviewPage"]
+                overviewPage=source_dict["OverviewPage"],
             )
         },
         tournament=source_dict["Tournament"],
@@ -88,10 +93,15 @@ def transmute_game(source_dict: dict) -> LolGame:
                         championId=lit.get_id(champion_name, object_type="champion"),
                         championName=champion_name,
                     )
-                    for idx, champion_name in enumerate(source_dict[f"Team{i}Picks"].split(","))
+                    for idx, champion_name in enumerate(
+                        source_dict[f"Team{i}Picks"].split(",")
+                    )
                 ],
                 bansNames=source_dict[f"Team{i}Bans"].split(","),
-                bans=[lit.get_id(champion) for champion in source_dict[f"Team{i}Bans"].split(",")],
+                bans=[
+                    lit.get_id(champion)
+                    for champion in source_dict[f"Team{i}Bans"].split(",")
+                ],
                 endOfGameStats=LolGameTeamEndOfGameStats(
                     towerKills=int(source_dict[f"Team{i}Towers"] or 0),
                     dragonKills=int(source_dict[f"Team{i}Dragons"] or 0),
@@ -103,14 +113,20 @@ def transmute_game(source_dict: dict) -> LolGame:
         },
     )
 
-    # For Riot API games, I directly parse the URL for the game to have its actual identifiers.
+    # For Riot API games, I directly parse the URL for the game because "ScoreboardGames.ScoreboardIDRiot" is null for all games (Jul 2020)
     if "leagueoflegends.com" in source_dict["MatchHistory"]:
-        parsed_url = urllib.parse.urlparse(urllib.parse.urlparse(source_dict["MatchHistory"]).fragment)
+        parsed_url = urllib.parse.urlparse(
+            urllib.parse.urlparse(source_dict["MatchHistory"]).fragment
+        )
 
         query = urllib.parse.parse_qs(parsed_url.query)
         platform_id, game_id = parsed_url.path.split("/")[1:]
         game_hash = query["gameHash"][0]
 
-        game["sources"]["riotLolApi"] = {"gameId": int(game_id), "platformId": platform_id, "gameHash": game_hash}
+        game["sources"]["riotLolApi"] = {
+            "gameId": int(game_id),
+            "platformId": platform_id,
+            "gameHash": game_hash,
+        }
 
     return game
