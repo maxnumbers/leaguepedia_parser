@@ -9,9 +9,8 @@ from lol_dto.classes.game import (
     LolGamePlayer,
     LolGameTeamEndOfGameStats,
 )
-
 from leaguepedia_parser.transmuters.game_players import LeaguepediaPlayerIdentifier
-
+from re import sub
 
 game_fields = {
     "Tournament",
@@ -62,6 +61,7 @@ def transmute_game(source_dict: dict) -> LolGame:
 
     Some fields like team gold and kills are not present. Get_game_details should be used for that.
     """
+    game_number = source_dict["Team1Score"] + source_dict["Team2Score"]
     game = LolGame(
         sources={
             "leaguepedia": LeaguepediaGameIdentifier(
@@ -75,7 +75,15 @@ def transmute_game(source_dict: dict) -> LolGame:
         start=datetime.fromisoformat(source_dict["DateTime UTC"])
         .replace(tzinfo=timezone.utc)
         .isoformat(timespec="seconds"),
-        gameInSeries=int(source_dict["Gamename"].replace("Game ", "")),
+        gameInSeries=int(
+            sub(
+                "[^0-9]",
+                "",
+                source_dict["Gamename"]
+                .replace("Tiebreaker", game_number)
+                .replace("Blind Pick", game_number),
+            )
+        ),
         patch=source_dict["Patch"],
         duration=int(float(source_dict["Gamelength Number"] or 0) * 60),
         vod=source_dict["VOD"],
@@ -119,14 +127,21 @@ def transmute_game(source_dict: dict) -> LolGame:
             urllib.parse.urlparse(source_dict["MatchHistory"]).fragment
         )
 
-        query = urllib.parse.parse_qs(parsed_url.query)
-        platform_id, game_id = parsed_url.path.split("/")[1:]
-        game_hash = query["gameHash"][0]
+        if "/" in parsed_url.query:
+            query = urllib.parse.parse_qs(parsed_url.query)
+            platform_id, game_id = parsed_url.path.split("/")[1:]
+            game_hash = query["gameHash"][0]
 
-        game["sources"]["riotLolApi"] = {
-            "gameId": int(game_id),
-            "platformId": platform_id,
-            "gameHash": game_hash,
-        }
+            game["sources"]["riotLolApi"] = {
+                "gameId": int(game_id),
+                "platformId": platform_id,
+                "gameHash": game_hash,
+            }
 
+        else:
+            game["sources"]["riotLolApi"] = {
+                "gameId": None,
+                "platformId": None,
+                "gameHash": None,
+            }
     return game
