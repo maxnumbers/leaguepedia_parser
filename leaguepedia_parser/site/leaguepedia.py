@@ -1,4 +1,5 @@
 import mwclient
+from time import sleep
 
 
 class LeaguepediaSite:
@@ -39,6 +40,8 @@ class LeaguepediaSite:
         Returns:
             List of rows from the query.
         """
+        # Added a small delay between queries to slow request rate and reduce server load
+        sleep(0.25)
         result = []
 
         # We check if we hit the API limit
@@ -46,7 +49,9 @@ class LeaguepediaSite:
             result.extend(
                 [
                     row["title"]
-                    for row in self.site.api("cargoquery", limit=self.limit, offset=len(result), **kwargs)["cargoquery"]
+                    for row in self.site.api(
+                        "cargoquery", limit=self.limit, offset=len(result), **kwargs
+                    )["cargoquery"]
                 ]
             )
 
