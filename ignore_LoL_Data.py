@@ -12,7 +12,7 @@ desired_year = ""
 desired_patch = None
 
 # iterate through regions
-for region in regions[9:]:
+for region in regions:
     # check to see if "region" is blank
     if region not in "":
         # printing current progress
@@ -66,3 +66,6 @@ print(
 
 game_df = pandas.DataFrame.from_dict(official_games)
 tournament_df = pandas.DataFrame.from_dict(official_tournaments)
+
+game_df.to_sql("Official Games", Lv1_pro_games)
+tournament_df.to_sql("Official Tournaments", Lv1_pro_games)

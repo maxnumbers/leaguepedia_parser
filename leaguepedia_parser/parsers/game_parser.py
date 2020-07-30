@@ -83,7 +83,7 @@ def get_tournaments(
     return [transmute_tournament(tournament) for tournament in result]
 
 
-def get_games(tournament_overview_page=None, **kwargs) -> List[LolGame]:
+def get_games(tournament_name=None, **kwargs) -> List[LolGame]:
     """Returns the list of games played in a tournament.
 
     Returns basic information about all games played in a tournament.
@@ -98,7 +98,7 @@ def get_games(tournament_overview_page=None, **kwargs) -> List[LolGame]:
     games = leaguepedia.query(
         tables="ScoreboardGames",
         fields=", ".join(game_fields),
-        where=f"ScoreboardGames.OverviewPage ='{tournament_overview_page}'",
+        where=f"ScoreboardGames.OverviewPage ='{tournament_name}'",
         order_by="ScoreboardGames.DateTime_UTC",
         **kwargs,
     )

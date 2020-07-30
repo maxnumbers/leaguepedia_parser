@@ -18,24 +18,47 @@ Pull requests to add features are more than welcome! (See ["Contributing"](https
 
 # Usage
 
-````python
-import leaguepedia_parser
+Use the following code-blocks as examples if you want to get:
 
-# Gets a list of region names as strings:
-regions = lpp.get_regions()
+- leaguepedia_parser imported
 
-# Gets a list of tournament dictionaries for a region, by default only returns primary tournaments:
-tournaments = lpp.get_tournaments("Korea", year=2020)
+  ```python
+  import leaguepedia_parser as lpp
+  # using "as lpp" not necessary, but makes code less verbose
+  ```
 
-# Gets a list of game dictionaries for a tournament, name comes from lpp.get_tournaments()[x]['OverviewPage']
-games = lpp.get_games("LCK 2020 Spring")
+- a _list_ of region names as _strings_:
 
-# Gets a dictionary of picks/bans, gold, kills, and other details from a game, game comes from lpp.get_games()[x]
-game = leaguepedia_parser.get_game_details(games[0])
+  ```python
+  regions = lpp.get_regions()
+  ```
 
-# Gets a string of the URL to the team’s logo
-logo_url = leaguepedia_parser.get_team_logo('T1')
-```
+- a _list_ of tournament _dictionaries_ for a region:
+
+  ```python
+  tournaments = lpp.get_tournaments("Korea", year=2020)
+  # default returns primary tournaments
+  ```
+
+* a _list_ of game _dictionaries_ for a tournament
+
+  ```python
+  games = lpp.get_games("LCK 2020 Spring")
+  # name comes from lpp.get_tournaments()[x]['name']
+  ```
+
+- a _dictionary_ of picks/bans, gold, kills, and other details from a game (for details see dictionary appendix).
+
+  ```python
+  game = leaguepedia_parser.get_game_details(games[0])
+  # game comes from lpp.get_games()[x]
+  ```
+
+- a _string_ of the URL to the team’s logo
+
+  ```python
+  logo_url = leaguepedia_parser.get_team_logo('T1')
+  ```
 
 More usage examples can be found in the [\_tests folder](https://github.com/mrtolkien/leaguepedia_parser/tree/master/leaguepedia_parser/_tests).
 
@@ -65,4 +88,3 @@ More usage examples can be found in the [\_tests folder](https://github.com/mrto
   - All durations from the game start are expressed in seconds
 
 Thanks for your interest! :D
-````
